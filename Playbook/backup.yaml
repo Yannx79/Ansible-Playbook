@@ -1,9 +1,10 @@
 ---
 - name: Backup Linux Servers
   hosts: all
-  become: yes
+  become: true
   ignore_errors: true
   ignore_unreachable: true
+  gather_facts: false
   vars:
     backup_dest: "/root/backup/"
     folders_to_backup:
@@ -11,6 +12,11 @@
       - "/var/log/"
       - "/home/"
     
+  pre_tasks:
+    - name: Init
+      ansible.builtin.debug:
+        msg: "Starting ..."
+
   tasks:
     - name: Create backup directory
       ansible.builtin.shell:
@@ -18,5 +24,9 @@
     
     - name: Make a security copy
       ansible.builtin.shell:
-        cmd: "tar -czf {{ backup_dest }}/backup_{{ ansible_date_time.date }}.tar.gz -C {{ item }} ."
-      loop: "{{ folders_to_backup }}"
+        cmd: "tar -czf {{ backup_dest }}/backup_{{ ansible_date_time.date }}.tar.gz -C {{ folders_to_backup[0] }} {{ folders_to_backup[1] }} {{ folders_to_backup[2] }}"
+
+  post_tasks:
+    - name: Finish
+      ansible.builtin.debug:
+        msg: "Ending ..."
