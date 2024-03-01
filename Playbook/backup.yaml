@@ -9,7 +9,7 @@
     folders_to_backup:
       - "/etc/"
       - "/var/log/"
-      - "/home/
+      - "/home/"
     
   tasks:
     - name: Create backup directory
