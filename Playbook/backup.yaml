@@ -10,7 +10,7 @@
       - "/etc/"
       - "/var/log/"
       - "/home/
-
+    
   tasks:
     - name: Create backup directory
       ansible.builtin.shell:
