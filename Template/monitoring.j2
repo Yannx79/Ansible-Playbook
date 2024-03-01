@@ -1,0 +1,5 @@
+IP: {{ ansible_default_ipv4.address }}
+Hostname: {{ ansible_hostname }}
+RAM Utilizada: {{ ansible_facts['ansible_memory_mb']['used'] }} MB
+Disco Utilizado: {{ ansible_facts['ansible_mounts'][0]['used_percent'] }}
+CPU Utilizada: {{ ansible_facts['ansible_processor'][0] }}

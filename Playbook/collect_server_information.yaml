@@ -1,0 +1,30 @@
+---
+- name: Collect server information
+  hosts: servers
+  gather_facts: true
+  become: yes
+  ignore_errors: true
+  ignore_unreachable: true
+  vars:
+    end_dest: "/root/backup/"
+    info_file: "{{ end_dest }}monitoring_all_nodes_{{ ansible_date_time.date }}_{{ ansible_date_time.hour }}{{ ansible_date_time.minute }}.txt"
+
+  tasks:
+    - name: Get information from the server
+      ansible.builtin.setup:
+
+    - name: Create information file with the template
+      ansible.builtin.template:
+        src: "../Template/monitoring.j2"
+        dest: "{{ end_dest }}monitoring_{{ ansible_eth0.ipv4.address }}_{{ ansible_date_time.date }}_{{ ansible_date_time.hour }}{{ ansible_date_time.minute }}.txt"
+
+    - name: Concatenate information from all nodes into a single file
+      ansible.builtin.shell:
+        cmd: "cat {{ end_dest }}monitoring_*.txt > {{ info_file }}"
+      delegate_to: localhost
+
+    - name: Copy the combined file to Ansible server
+      ansible.builtin.synchronize:
+        src: "{{ info_file }}"
+        dest: "{{ info_file }}"
+        mode: pull  # Copy from nodes to the Ansible server
