@@ -1,0 +1,10 @@
+---
+- name: Conexion
+  host: all
+  ignore_errors: true
+  ignore_unreachable: true
+  gather_facts: true
+
+  tasks:
+    - name: Test conexion
+      ansible.builtin.ping:
