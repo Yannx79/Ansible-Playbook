@@ -1,0 +1,20 @@
+---
+- name: Conexion
+  hosts: all
+  ignore_errors: true
+  ignore_unreachable: true
+  gather_facts: false
+
+  pre_tasks:
+    - name: Start
+      ansible.builtin.debug:
+        msg: "Starting ..."
+
+  tasks:
+    - name: Test conexion
+      ansible.builtin.ping:
+
+  post_tasks:
+    - name: End
+      ansible.builtin.debug:
+        msg: "Ending ..."
