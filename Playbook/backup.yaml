@@ -12,12 +12,11 @@
       - "/home/
     
   tasks:
-  
     - name: Create backup directory
       ansible.builtin.shell:
         cmd: "mkdir -p {{ backup_dest }}"
     
     - name: Make a security copy
       ansible.builtin.shell:
-      cmd: "tar -czf {{ backup_dest }}/backup_{{ ansible_date_time.date }}.tar.gz -C {{ item }} ."
+        cmd: "tar -czf {{ backup_dest }}/backup_{{ ansible_date_time.date }}.tar.gz -C {{ item }} ."
       loop: "{{ folders_to_backup }}"
