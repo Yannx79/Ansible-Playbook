@@ -1,6 +1,6 @@
 ---
 - name: Collect server information
-  hosts: servers
+  hosts: all
   gather_facts: true
   become: yes
   ignore_errors: true
