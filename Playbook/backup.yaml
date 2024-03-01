@@ -11,7 +11,8 @@
       - "/var/log/"
       - "/home/
     
-tasks:
+  tasks:
+  
     - name: Create backup directory
       ansible.builtin.shell:
         cmd: "mkdir -p {{ backup_dest }}"
