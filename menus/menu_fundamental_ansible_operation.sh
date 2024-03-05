@@ -1,7 +1,7 @@
 #!/bin/bash
 # By: Yannick Funes
 # Datetime: 05/03/2024 23:31
-# 
+# https://youtu.be/7m6xc3kaNug
 
 title="Menu for Fundamental Ansible Operations"
 description="The code is a Bash script for a menu-driven tool to manage Ansible playbooks and hosts. It provides functionalities to list, search, add, update, and delete playbooks and hosts."  
