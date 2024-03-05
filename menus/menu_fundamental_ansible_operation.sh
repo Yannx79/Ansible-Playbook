@@ -81,11 +81,9 @@ display() {
         
         case $option in
             1) show_ansible_version;;
-            2)
-                operate_playbooks;;
-            3)
-                operate_hosts;;
-            11)
+            2) operate_playbooks;;
+            3) operate_hosts;;
+            4)
                 echo "Leaving the menu ..."
                 sleep 1
                 clear
@@ -104,6 +102,8 @@ operate_playbooks() {
         show_trading_playbooks
         get_input
 
+        echo
+        echo "=============================================================="
         case $option in
             1) list_playbooks;;
             2) search_playbook;;
@@ -140,21 +140,19 @@ search_playbook() {
     else 
         if [ -f "./playbooks/$pb_name" ]; then
             ls -l "./playbooks/$pb_name"
-            echo ""
             cat "./playbooks/$pb_name"
         else 
             echo "Playbook $pb_name not found ..."
-        if
+        fi
     fi
-
 }
 
 add_playbook() {
     read -p "Enter playbook name: " pb_name
     if [ ! -d "./playbooks/" ]; then
         mkdir "./playbooks/"
-    if
-    vim -N "./playboos/$pb_name"
+    fi
+    vim -N "./playbooks/$pb_name"
 }
 
 update_playbook() {
@@ -164,11 +162,11 @@ update_playbook() {
         echo "Playbook $pb_name not found ..."
     else 
         if [ -f "./playbooks/$pb_name" ]; then
-            vim -N "./playboos/$pb_name"
+            vim -N "./playbooks/$pb_name"
         else 
             echo "Playbook $pb_name not found ..."
-        if
-    if
+        fi
+    fi
 }
 
 delete_playbook() {
@@ -178,12 +176,12 @@ delete_playbook() {
         echo "Playbook $pb_name not found ..."
     else 
         if [ -f "./playbooks/$pb_name" ]; then
-            rm $pb_name
+            rm "./playbooks/$pb_name"
             echo "Playbook $pb_name removed"
         else 
             echo "Playbook $pb_name not found ..."
-        if
-    if
+        fi
+    fi
 }
 
 operate_hosts() {
@@ -191,6 +189,8 @@ operate_hosts() {
         show_trading_hosts
         get_input
 
+        echo ""
+        echo "=============================================================="
         case $option in
             1) list_hosts;;
             2) search_host;;
@@ -213,23 +213,77 @@ operate_hosts() {
 }
 
 list_hosts() {
-    ansible all -m setup -f 1
+    if [ -s "/etc/ansible/hosts" ];then
+        cat "/etc/ansible/hosts"
+    else 
+        echo "No host registered"
+    fi
 }
 
 search_host() {
-    ls
+    read -p "Enter hostname: " hostname_host
+    if grep -q "$hostname_host" "/etc/ansible/hosts"; then
+        echo "Hostname $hostname_host exists"
+    else
+        echo "Hostname $hostname_host does not exist"
+    fi
 }
-
 add_host() {
-    ls
+    read -p "Enter IP: " ip_host
+    read -p "Enter hostname: " hostname_host
+
+    ip_hostname="$ip_host $hostname_host"
+    
+    echo $ip_hostname >> /etc/hosts
+    echo $hostname_host >> /etc/ansible/hosts
+    echo "$hostname_host registered ..."
 }
 
 update_host() {
-    ls
+    read -p "Enter current hostname to update: " old_hostname
+    read -p "Enter new hostname: " new_hostname
+    read -p "Enter new IP address: " new_ip
+
+    ansible_hosts="/etc/ansible/hosts"
+    etc_hosts="/etc/hosts"
+
+    # Update hostname in /etc/ansible/hosts
+    if [ -f "$ansible_hosts" ]; then
+        sed -i "s/\b$old_hostname\b/$new_hostname/" "$ansible_hosts"
+        echo "Host $old_hostname updated to $new_hostname in $ansible_hosts."
+    else
+        echo "File $ansible_hosts not found."
+    fi
+
+    # Update IP and hostname in /etc/hosts
+    if [ -f "$etc_hosts" ]; then
+        sed -i "s/\b$old_hostname\b/$new_hostname/" "$etc_hosts"
+        sed -i "s/\b$old_hostname\b/$new_ip/" "$etc_hosts"
+        echo "Host $old_hostname updated to $new_hostname with IP $new_ip in $etc_hosts."
+    else
+        echo "File $etc_hosts not found."
+    fi
 }
 
 delete_host() {
-    ls
+    read -p "Enter hostname: " hostname
+
+    ansible_hosts="/etc/ansible/hosts"
+    etc_hosts="/etc/hosts"
+
+    if [ -f "$ansible_hosts" ]; then
+        sed -i "/^$hostname\>/d" "$ansible_hosts"
+        echo "Host $hostname deleted in $ansible_hosts."
+    else
+        echo "File $ansible_hosts not found."
+    fi
+
+    if [ -f "$etc_hosts" ]; then
+        sed -i "/\b$hostname\b/d" "$etc_hosts"
+        echo "Host $hostname deleted in $etc_hosts."
+    else
+        echo "File $etc_hosts not found."
+    fi
 }
 
 # Init Menu
