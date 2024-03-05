@@ -1,0 +1,26 @@
+---
+- name: Install Basic Service
+  hosts: all
+  ignore_errors: true
+  become: true
+  ignore_unreachable: true
+
+  # Install apache & git
+  roles:
+    - { role: geerlingguy.apache }
+    - { role: geerlingguy.git }
+  
+  pre_tasks:
+    - name: Start
+      ansible.builtin.debug:
+        msg: "Starting ..."
+
+  tasks:
+    - name: Process
+      ansible.builtin.debug:
+        msg: "Installing ..."
+
+  post_tasks:
+    - name: End
+      ansible.builtin.debug:
+        msg: "Ending ..."
