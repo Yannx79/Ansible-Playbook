@@ -7,7 +7,7 @@ title="Menu for Fundamental Ansible Operations"
 description="The code is a Bash script for a menu-driven tool to manage Ansible playbooks and hosts. It provides functionalities to list, search, add, update, and delete playbooks and hosts."  
 machine=`who am i | sed "s/^\(.*\)(\(.*\))\(.*\)/\2/" | sed "s/ //g"`
 date=`date +%d/%m/%Y`
-hour=`date +%H:%M:%Sc`
+hour=`date +%H:%M:%S`
 server=`logname`
 
 # GENERAL
