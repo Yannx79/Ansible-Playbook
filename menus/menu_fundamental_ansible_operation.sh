@@ -79,6 +79,8 @@ display() {
         show_main
         get_input
         
+        echo
+        echo "=============================================================="
         case $option in
             1) show_ansible_version;;
             2) operate_playbooks;;
