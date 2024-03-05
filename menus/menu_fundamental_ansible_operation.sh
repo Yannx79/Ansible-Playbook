@@ -126,26 +126,64 @@ operate_playbooks() {
 }
 
 list_playbooks() {
+    if [ ! -d "./playbooks/" ]; then 
+        mkdir ./playbooks/
+    fi
     ls -l ./playbooks
 }
 
 search_playbook() {
     read -p "Enter playbook name: " pb_name
-    ls -l "./playbooks/$pb_name"
-    echo ""
-    cat "./playbooks/$pb_name"
+    if [ ! -d "./playbooks/" ]; then
+        mkdir ./playbooks/
+        echo "Playbook $pb_name not found ..."
+    else 
+        if [ -f "./playbooks/$pb_name" ]; then
+            ls -l "./playbooks/$pb_name"
+            echo ""
+            cat "./playbooks/$pb_name"
+        else 
+            echo "Playbook $pb_name not found ..."
+        if
+    fi
+
 }
 
 add_playbook() {
-    ls
+    read -p "Enter playbook name: " pb_name
+    if [ ! -d "./playbooks/" ]; then
+        mkdir "./playbooks/"
+    if
+    vim -N "./playboos/$pb_name"
 }
 
 update_playbook() {
-    ls
+    read -p "Enter playbook name: " pb_name
+    if [ ! -d "./playbooks/" ]; then
+        mkdir "./playbooks/"
+        echo "Playbook $pb_name not found ..."
+    else 
+        if [ -f "./playbooks/$pb_name" ]; then
+            vim -N "./playboos/$pb_name"
+        else 
+            echo "Playbook $pb_name not found ..."
+        if
+    if
 }
 
 delete_playbook() {
-    ls
+    read -p "Enter playbook name: " pb_name
+    if [ ! -d "./playbooks/" ]; then
+        mkdir "./playbooks/"
+        echo "Playbook $pb_name not found ..."
+    else 
+        if [ -f "./playbooks/$pb_name" ]; then
+            rm $pb_name
+            echo "Playbook $pb_name removed"
+        else 
+            echo "Playbook $pb_name not found ..."
+        if
+    if
 }
 
 operate_hosts() {
@@ -194,6 +232,6 @@ delete_host() {
     ls
 }
 
-# INIT MENU
+# Init Menu
 
 display
