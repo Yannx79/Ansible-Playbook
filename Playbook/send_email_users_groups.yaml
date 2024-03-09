@@ -1,6 +1,6 @@
 ---
 - name: Send list of users and groups via email
-  hosts: your_server
+  hosts: localhost
   gather_facts: false
   become: true
   ignore_errors: true
@@ -21,11 +21,14 @@
         dest: /tmp/email_body.txt
       when: user_list.stdout != "" or group_list.stdout != ""
 
-    - name: Send email
-      mail:
-        host: your_mail_server
-        port: 25
+    - name: Send email via Gmail SMTP
+      smtp:
+        host: smtp.gmail.com
+        port: 587
+        username: ""
+        password: ""
+        to: "other@gmail.com"
         subject: "List of Users and Groups"
         body: "{{ lookup('file', '/tmp/email_body.txt') }}"
-        to: your_email@example.com
+        starttls: yes
       when: user_list.stdout != "" or group_list.stdout != ""
