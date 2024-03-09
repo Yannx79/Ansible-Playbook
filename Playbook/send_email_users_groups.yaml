@@ -1,0 +1,31 @@
+---
+- name: Send list of users and groups via email
+  hosts: your_server
+  gather_facts: false
+  become: true
+  ignore_errors: true
+  ignore_unreachable: true
+
+  tasks:
+    - name: Get list of users
+      shell: "getent passwd | cut -d: -f1"
+      register: user_list
+
+    - name: Get list of groups
+      shell: "getent group | cut -d: -f1"
+      register: group_list
+
+    - name: Generate email body
+      template:
+        src: "../Template/email_template.j2"
+        dest: /tmp/email_body.txt
+      when: user_list.stdout != "" or group_list.stdout != ""
+
+    - name: Send email
+      mail:
+        host: your_mail_server
+        port: 25
+        subject: "List of Users and Groups"
+        body: "{{ lookup('file', '/tmp/email_body.txt') }}"
+        to: your_email@example.com
+      when: user_list.stdout != "" or group_list.stdout != ""
