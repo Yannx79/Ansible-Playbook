@@ -1,0 +1,17 @@
+=======================================
+              Informe del Servidor
+=======================================
+
+- Hostname: {{ hostname }}
+- IP Address: {{ ip_address }}
+- Fecha: {{ fecha }}
+
+=======================================
+           Lista de Usuarios
+=======================================
+{{ lookup('file', '/tmp/files_ansible/users.txt') }}
+
+=======================================
+            Lista de Grupos
+=======================================
+{{ lookup('file', '/tmp/files_ansible/groups.txt') }}
