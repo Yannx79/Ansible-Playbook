@@ -1,0 +1,52 @@
+# By: Yannick Funes
+# Datetime: 08/03/2024
+---
+- name: Get users and groups
+  hosts: your_servers
+  gather_facts: yes
+  ignore_errors: true
+  ignore_unreachable: true
+  become: true
+
+  tasks:
+    - name: Get users and groups
+      ansible.builtin.command: getent passwd
+      register: users_result
+
+    - name: Get groups
+      ansible.builtin.command: getent group
+      register: groups_result
+
+    - name: Create directory for temporary files
+      ansible.builtin.file:
+        path: "/tmp/ansible_copy"
+        state: directory
+
+    - name: Save list of users to a file
+      ansible.builtin.copy:
+        content: "{{ users_result.stdout }}"
+        dest: "/tmp/files_ansible/users.txt"
+
+    - name: Save list of groups to a file
+      ansible.builtin.copy:
+        content: "{{ groups_result.stdout }}"
+        dest: "/tmp/files_ansible/groups.txt"
+
+    - name: Get server information
+      ansible.builtin.setup:
+        filter: "ansible_hostname,ansible_default_ipv4.address"
+      register: server_info
+
+    - name: Create report using a template
+      ansible.builtin.template:
+        src: informe_template.j2
+        dest: "/tmp/files_ansible/report_{{ server_info.ansible_facts.ansible_default_ipv4.address }}_{{ ansible_date_time.date }}.txt"
+      vars:
+        hostname: "{{ server_info.ansible_facts.ansible_hostname }}"
+        ip_address: "{{ server_info.ansible_facts.ansible_default_ipv4.address }}"
+        date: "{{ ansible_date_time.date }}"
+
+    - name: Send the file to the ansible server
+      ansible.builtin.fetch:
+        src: "/tmp/files_ansible/report_{{ server_info.ansible_facts.ansible_default_ipv4.address }}_{{ ansible_date_time.date }}.txt"
+        dest: "/tmp/ansible/"
